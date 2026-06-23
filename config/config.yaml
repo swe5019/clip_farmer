@@ -1,0 +1,63 @@
+# Secrets are NEVER stored here -- only references/labels. Actual secrets live in .env.
+
+general:
+  vps_timezone: "America/New_York"
+  whisper_model: "medium"      # tiny|base|small|medium|large-v3 -- tradeoff: accuracy vs CPU/GPU time
+  whisper_device: "cpu"        # cpu|cuda
+  max_llm_chunks_per_episode: 6
+  clip_min_sec: 30
+  clip_max_sec: 90
+  review_ttl_hours: 48
+
+feature_flags:
+  autopost_enabled: false      # must stay false until you deliberately decide to skip human review
+  platforms_enabled:
+    youtube_shorts: false
+    tiktok: false
+    instagram_reels: false
+    facebook_reels: false
+
+sources:
+  - name: "Bob Does Sports Pod"
+    type: youtube_channel
+    url: "https://www.youtube.com/@Bobdoessportspod"
+    active: true
+  - name: "More Life with Carl Radke"
+    type: youtube_channel
+    url: "https://www.youtube.com/@MoreLifeWithCarlRadke"
+    active: true
+
+platform_accounts:
+  - platform: youtube_shorts
+    account_label: "main_yt"
+    enabled: false
+    daily_quota: 2
+    credentials_env_prefix: "YT_MAIN"
+  - platform: tiktok
+    account_label: "main_tiktok"
+    enabled: false
+    daily_quota: 1
+    credentials_env_prefix: "TIKTOK_MAIN"
+  - platform: instagram_reels
+    account_label: "main_ig"
+    enabled: false
+    daily_quota: 1
+    credentials_env_prefix: "IG_MAIN"
+  - platform: facebook_reels
+    account_label: "main_fb"
+    enabled: false
+    daily_quota: 1
+    credentials_env_prefix: "FB_MAIN"
+
+telegram:
+  review_chat_id_env: "TELEGRAM_REVIEW_CHAT_ID"
+
+captions:
+  style_template: "config/subtitle_styles/default.ass.template"
+  font: "Montserrat-Bold"
+  font_size: 64
+  highlight_color: "&H00FFFF&"
+
+reframe:
+  strategy: "center_crop_smoothed"   # or "face_biased_crop"
+  smoothing_alpha: 0.15

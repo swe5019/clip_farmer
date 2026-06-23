@@ -1,0 +1,21 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# secrets
+.env
+
+# runtime artifacts
+media/raw/*
+media/transcripts/*
+media/clips/*
+media/thumbnails/*
+!media/raw/.gitkeep
+!media/transcripts/.gitkeep
+!media/clips/.gitkeep
+!media/thumbnails/.gitkeep
+data/*.db
+
+.pytest_cache/
