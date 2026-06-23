@@ -22,10 +22,17 @@ def main() -> None:
     settings = get_settings()
     with connect(settings.db_path) as conn:
         row = conn.execute("SELECT * FROM tracked_sources WHERE name = ?", (source_name,)).fetchone()
-        if not row:
-            print(f"No tracked source named '{source_name}'. Run run-stage discover first or check config.yaml.")
-            sys.exit(1)
-        source_id = row["id"]
+        if row:
+            source_id = row["id"]
+        else:
+            config_source = next((s for s in settings.config.sources if s.name == source_name), None)
+            if config_source is None:
+                print(f"No source named '{source_name}' in the DB or config.yaml. Check spelling.")
+                sys.exit(1)
+            source_id = repo_sources.upsert_source(
+                conn, type=config_source.type, name=config_source.name, url=config_source.url, active=config_source.active
+            )
+            print(f"Registered source '{source_name}' from config.yaml (id={source_id}).")
         external_id = url.split("v=")[-1].split("&")[0] if "v=" in url else url
         new_id = repo_episodes.insert_episode_if_new(
             conn,
